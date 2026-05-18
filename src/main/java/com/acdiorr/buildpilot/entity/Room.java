@@ -1,9 +1,12 @@
 package com.acdiorr.buildpilot.entity;
 
+import com.acdiorr.buildpilot.entity.enums.RoomShapeType;
 import com.acdiorr.buildpilot.entity.enums.RoomType;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
@@ -32,6 +35,16 @@ public class Room {
     @Column(name = "room_type")
     private RoomType roomType;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "shape_type", nullable = false)
+    @Builder.Default
+    private RoomShapeType shapeType = RoomShapeType.RECTANGLE;
+
+    @Min(value = 2, message = "wallCount must be greater than or equal to 2")
+    @Column(name = "wall_count", nullable = false)
+    @Builder.Default
+    private Integer wallCount = 4;
+
     @Column(name = "width", precision = 10, scale = 2)
     private BigDecimal width;
 
@@ -40,6 +53,14 @@ public class Room {
 
     @Column(name = "height", precision = 10, scale = 2)
     private BigDecimal height;
+
+    @DecimalMin(value = "0.0", inclusive = true, message = "positionX must be greater than or equal to 0")
+    @Column(name = "position_x", precision = 10, scale = 2)
+    private BigDecimal positionX;
+
+    @DecimalMin(value = "0.0", inclusive = true, message = "positionY must be greater than or equal to 0")
+    @Column(name = "position_y", precision = 10, scale = 2)
+    private BigDecimal positionY;
 
     @Column(name = "door_count")
     private Integer doorCount;
@@ -60,6 +81,22 @@ public class Room {
     @Builder.Default
     private List<ConstructionElement> elements = new ArrayList<>();
 
+    @PrePersist
+    @PreUpdate
+    private void applyShapeDefaults() {
+        if (shapeType == null) {
+            shapeType = RoomShapeType.RECTANGLE;
+        }
+
+        if (wallCount == null) {
+            wallCount = defaultWallCountFor(shapeType);
+        }
+    }
+
+    private int defaultWallCountFor(RoomShapeType type) {
+        return type == RoomShapeType.RECTANGLE ? 4 : 3;
+    }
+
     // Convenience helpers to keep both sides in sync
     public void addElement(ConstructionElement element) {
         elements.add(element);
@@ -71,4 +108,3 @@ public class Room {
         element.setRoom(null);
     }
 }
-

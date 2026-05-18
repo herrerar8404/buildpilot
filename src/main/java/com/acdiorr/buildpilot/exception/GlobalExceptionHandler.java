@@ -49,6 +49,46 @@ public class GlobalExceptionHandler {
         return buildResponse(HttpStatus.NOT_FOUND, ex.getMessage(), request, null);
     }
 
+    // 404 – construction element not found
+    @ExceptionHandler(ConstructionElementNotFoundException.class)
+    public ResponseEntity<ApiError> handleConstructionElementNotFound(
+            ConstructionElementNotFoundException ex,
+            HttpServletRequest request) {
+
+        log.warn("Construction element not found: {}", ex.getMessage());
+        return buildResponse(HttpStatus.NOT_FOUND, ex.getMessage(), request, null);
+    }
+
+    // 404 – element material not found
+    @ExceptionHandler(ElementMaterialNotFoundException.class)
+    public ResponseEntity<ApiError> handleElementMaterialNotFound(
+            ElementMaterialNotFoundException ex,
+            HttpServletRequest request) {
+
+        log.warn("Element material not found: {}", ex.getMessage());
+        return buildResponse(HttpStatus.NOT_FOUND, ex.getMessage(), request, null);
+    }
+
+    // 404 – quotation not found
+    @ExceptionHandler(QuotationNotFoundException.class)
+    public ResponseEntity<ApiError> handleQuotationNotFound(
+            QuotationNotFoundException ex,
+            HttpServletRequest request) {
+
+        log.warn("Quotation not found: {}", ex.getMessage());
+        return buildResponse(HttpStatus.NOT_FOUND, ex.getMessage(), request, null);
+    }
+
+    // 409 – material already assigned to construction element
+    @ExceptionHandler(DuplicateElementMaterialException.class)
+    public ResponseEntity<ApiError> handleDuplicateElementMaterial(
+            DuplicateElementMaterialException ex,
+            HttpServletRequest request) {
+
+        log.warn("Duplicate element material: {}", ex.getMessage());
+        return buildResponse(HttpStatus.CONFLICT, ex.getMessage(), request, null);
+    }
+
     // 409 – duplicate material name
     @ExceptionHandler(MaterialDuplicateNameException.class)
     public ResponseEntity<ApiError> handleMaterialDuplicateName(
@@ -56,6 +96,16 @@ public class GlobalExceptionHandler {
             HttpServletRequest request) {
 
         log.warn("Duplicate material name: {}", ex.getMessage());
+        return buildResponse(HttpStatus.CONFLICT, ex.getMessage(), request, null);
+    }
+
+    // 409 – project already has a quotation
+    @ExceptionHandler(DuplicateQuotationException.class)
+    public ResponseEntity<ApiError> handleDuplicateQuotation(
+            DuplicateQuotationException ex,
+            HttpServletRequest request) {
+
+        log.warn("Duplicate quotation: {}", ex.getMessage());
         return buildResponse(HttpStatus.CONFLICT, ex.getMessage(), request, null);
     }
 
@@ -106,4 +156,3 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(status).body(error);
     }
 }
-

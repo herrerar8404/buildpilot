@@ -61,6 +61,14 @@ public class Project {
     @Builder.Default
     private List<Room> rooms = new ArrayList<>();
 
+    /**
+     * Inverse (non-owning) side of the OneToOne with Quotation.
+     * The FK lives in the {@code quotations} table.
+     */
+    @OneToOne(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonManagedReference("project-quotation")
+    private Quotation quotation;
+
     // Convenience helper to keep both sides in sync
     public void addRoom(Room room) {
         rooms.add(room);
