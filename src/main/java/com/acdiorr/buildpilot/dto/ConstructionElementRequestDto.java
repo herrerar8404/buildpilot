@@ -39,5 +39,7 @@ public class ConstructionElementRequestDto {
     private BigDecimal calculatedArea;
 
     private String description;
+
+    private Long templateId;
 }
 

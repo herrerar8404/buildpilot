@@ -69,6 +69,10 @@ public class ConstructionElement {
     @JsonBackReference("room-elements")
     private Room room;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "template_id")
+    private ConstructionTemplate constructionTemplate;
+
     @OneToMany(mappedBy = "constructionElement", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JsonManagedReference("element-materials")
     @Builder.Default
@@ -98,4 +102,3 @@ public class ConstructionElement {
         updatedAt = LocalDateTime.now();
     }
 }
-

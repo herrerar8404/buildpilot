@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -88,6 +89,19 @@ public class QuotationServiceImpl implements QuotationService {
 
         Quotation saved = quotationRepository.save(existing);
         return quotationMapper.toResponseDto(saved);
+    }
+
+    @Override
+    @Transactional
+    public Optional<QuotationResponseDto> recalculateProjectQuotationIfExists(Long projectId) {
+        log.info("Recalculating quotation for project id={} if it exists", projectId);
+
+        return quotationRepository.findByProjectId(projectId)
+                .map(quotation -> {
+                    applyFinancialCalculations(quotation, projectId);
+                    Quotation saved = quotationRepository.save(quotation);
+                    return quotationMapper.toResponseDto(saved);
+                });
     }
 
     @Override
