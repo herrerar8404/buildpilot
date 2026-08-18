@@ -79,6 +79,26 @@ public class GlobalExceptionHandler {
         return buildResponse(HttpStatus.NOT_FOUND, ex.getMessage(), request, null);
     }
 
+    // 404 - construction template not found
+    @ExceptionHandler(ConstructionTemplateNotFoundException.class)
+    public ResponseEntity<ApiError> handleConstructionTemplateNotFound(
+            ConstructionTemplateNotFoundException ex,
+            HttpServletRequest request) {
+
+        log.warn("Construction template not found: {}", ex.getMessage());
+        return buildResponse(HttpStatus.NOT_FOUND, ex.getMessage(), request, null);
+    }
+
+    // 404 - template material not found
+    @ExceptionHandler(TemplateMaterialNotFoundException.class)
+    public ResponseEntity<ApiError> handleTemplateMaterialNotFound(
+            TemplateMaterialNotFoundException ex,
+            HttpServletRequest request) {
+
+        log.warn("Template material not found: {}", ex.getMessage());
+        return buildResponse(HttpStatus.NOT_FOUND, ex.getMessage(), request, null);
+    }
+
     // 409 – material already assigned to construction element
     @ExceptionHandler(DuplicateElementMaterialException.class)
     public ResponseEntity<ApiError> handleDuplicateElementMaterial(
@@ -107,6 +127,46 @@ public class GlobalExceptionHandler {
 
         log.warn("Duplicate quotation: {}", ex.getMessage());
         return buildResponse(HttpStatus.CONFLICT, ex.getMessage(), request, null);
+    }
+
+    // 409 - duplicate construction template name
+    @ExceptionHandler(ConstructionTemplateDuplicateNameException.class)
+    public ResponseEntity<ApiError> handleConstructionTemplateDuplicateName(
+            ConstructionTemplateDuplicateNameException ex,
+            HttpServletRequest request) {
+
+        log.warn("Duplicate construction template name: {}", ex.getMessage());
+        return buildResponse(HttpStatus.CONFLICT, ex.getMessage(), request, null);
+    }
+
+    // 409 - material already assigned to construction template
+    @ExceptionHandler(DuplicateTemplateMaterialException.class)
+    public ResponseEntity<ApiError> handleDuplicateTemplateMaterial(
+            DuplicateTemplateMaterialException ex,
+            HttpServletRequest request) {
+
+        log.warn("Duplicate template material: {}", ex.getMessage());
+        return buildResponse(HttpStatus.CONFLICT, ex.getMessage(), request, null);
+    }
+
+    // 409 - construction element already has assigned materials
+    @ExceptionHandler(ConstructionElementAlreadyMaterializedException.class)
+    public ResponseEntity<ApiError> handleConstructionElementAlreadyMaterialized(
+            ConstructionElementAlreadyMaterializedException ex,
+            HttpServletRequest request) {
+
+        log.warn("Blocked template apply due to existing materials: {}", ex.getMessage());
+        return buildResponse(HttpStatus.CONFLICT, ex.getMessage(), request, null);
+    }
+
+    // 400 - invalid template application input/state
+    @ExceptionHandler(InvalidTemplateApplicationException.class)
+    public ResponseEntity<ApiError> handleInvalidTemplateApplication(
+            InvalidTemplateApplicationException ex,
+            HttpServletRequest request) {
+
+        log.warn("Invalid template application: {}", ex.getMessage());
+        return buildResponse(HttpStatus.BAD_REQUEST, ex.getMessage(), request, null);
     }
 
     // 400 – @Valid constraint violations

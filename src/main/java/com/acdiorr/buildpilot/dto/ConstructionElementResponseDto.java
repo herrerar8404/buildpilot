@@ -32,5 +32,9 @@ public class ConstructionElementResponseDto {
     // Room summary to avoid exposing full Room entity
     private Long roomId;
     private String roomName;
+
+    // Optional template summary
+    private Long templateId;
+    private String templateName;
 }
 

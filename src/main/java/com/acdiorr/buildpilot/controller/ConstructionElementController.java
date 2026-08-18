@@ -1,9 +1,11 @@
 package com.acdiorr.buildpilot.controller;
 
+import com.acdiorr.buildpilot.dto.ApplyTemplateResponseDto;
 import com.acdiorr.buildpilot.dto.ConstructionElementRequestDto;
 import com.acdiorr.buildpilot.dto.ConstructionElementResponseDto;
 import com.acdiorr.buildpilot.service.ConstructionElementService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -86,6 +88,24 @@ public class ConstructionElementController {
 
         log.info("PUT /api/v1/construction-elements/{}", id);
         return ResponseEntity.ok(constructionElementService.updateConstructionElement(id, request));
+    }
+
+    @Operation(summary = "Apply a construction template to an element and auto-generate element materials")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Template applied and materials generated"),
+            @ApiResponse(responseCode = "400", description = "Invalid template application state"),
+            @ApiResponse(responseCode = "404", description = "Construction element or template not found"),
+            @ApiResponse(responseCode = "409", description = "Construction element already has assigned materials")
+    })
+    @PostMapping("/api/v1/construction-elements/{constructionElementId}/apply-template/{templateId}")
+    public ResponseEntity<ApplyTemplateResponseDto> applyTemplate(
+            @Parameter(description = "Construction element ID", required = true)
+            @PathVariable Long constructionElementId,
+            @Parameter(description = "Construction template ID", required = true)
+            @PathVariable Long templateId) {
+
+        log.info("POST /api/v1/construction-elements/{}/apply-template/{}", constructionElementId, templateId);
+        return ResponseEntity.ok(constructionElementService.applyTemplate(constructionElementId, templateId));
     }
 
     @Operation(summary = "Delete a construction element")

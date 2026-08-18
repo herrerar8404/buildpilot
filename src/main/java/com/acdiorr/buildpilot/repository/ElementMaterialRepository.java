@@ -20,6 +20,8 @@ public interface ElementMaterialRepository extends JpaRepository<ElementMaterial
            "WHERE em.constructionElement.id = :constructionElementId")
     List<ElementMaterial> findByConstructionElementId(@Param("constructionElementId") Long constructionElementId);
 
+    boolean existsByConstructionElementId(Long constructionElementId);
+
     boolean existsByConstructionElementIdAndMaterialId(Long constructionElementId, Long materialId);
 
     @Query("SELECT SUM(em.calculatedCost) FROM ElementMaterial em " +
