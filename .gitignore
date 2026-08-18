@@ -35,3 +35,15 @@ build/
 # Frontend (React + Vite)
 frontend/node_modules/
 frontend/dist/
+frontend/.npm-cache/
+frontend/*.tsbuildinfo
+frontend/vite.config.js
+frontend/vite.config.d.ts
+frontend/tailwind.config.js
+frontend/tailwind.config.d.ts
+
+# Local environment and generated runtime files
+.env
+*.log
+*_out.txt
+*_result.txt
